@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
+import medicineRoutes from "./routes/medicine.routes";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(express.json());
 
 app.all("/api/auth/*", toNodeHandler(auth));
+app.use("/api/medicines", medicineRoutes);
 
 app.get("/health", (req, res) => {
     res.json({ status: "ok" });
