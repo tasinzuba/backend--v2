@@ -134,7 +134,7 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
         if (!order) return res.status(404).json(error("Order not found"));
 
         // Check if seller has items in this order
-        const hasItems = order.items.some(item => item.medicine.sellerId === req.user!.id);
+        const hasItems = order.items.some((item: any) => item.medicine.sellerId === req.user!.id);
         if (!hasItems) return res.status(403).json(error("Forbidden"));
 
         const updated = await prisma.order.update({

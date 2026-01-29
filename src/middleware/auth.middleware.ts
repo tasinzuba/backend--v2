@@ -9,7 +9,12 @@ export interface AuthRequest extends Request {
         name: string;
         role: string;
     };
-    session?: any;
+    session?: {
+        id: string;
+        userId: string;
+        expiresAt: Date;
+        [key: string]: any;
+    };
 }
 
 export const authMiddleware = async (
