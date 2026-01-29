@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 import medicineRoutes from "./routes/medicine.routes";
+import orderRoutes from "./routes/order.routes";
+import sellerRoutes from "./routes/seller.routes";
 
 dotenv.config();
 
@@ -15,6 +17,8 @@ app.use(express.json());
 
 app.all("/api/auth/*", toNodeHandler(auth));
 app.use("/api/medicines", medicineRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/seller", sellerRoutes);
 
 app.get("/health", (req, res) => {
     res.json({ status: "ok" });
