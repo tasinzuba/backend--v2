@@ -6,6 +6,7 @@ import { auth } from "./lib/auth";
 import medicineRoutes from "./routes/medicine.routes";
 import orderRoutes from "./routes/order.routes";
 import sellerRoutes from "./routes/seller.routes";
+import adminRoutes from "./routes/admin.routes";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.all("/api/auth/*", toNodeHandler(auth));
 app.use("/api/medicines", medicineRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/seller", sellerRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/health", (req, res) => {
     res.json({ status: "ok" });
