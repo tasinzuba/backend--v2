@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./lib/auth";
 
 dotenv.config();
 
@@ -9,6 +11,8 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(express.json());
+
+app.all("/api/auth/*", toNodeHandler(auth));
 
 app.get("/health", (req, res) => {
     res.json({ status: "ok" });
