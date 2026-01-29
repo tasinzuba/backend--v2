@@ -8,6 +8,8 @@ import {
     deleteCategory
 } from "../controllers/admin.controller";
 import { authMiddleware, roleMiddleware } from "../middleware/auth.middleware";
+import { validate } from "../middleware/validation.middleware";
+import { categorySchema } from "../validators/schemas";
 
 const router = Router();
 
@@ -17,7 +19,7 @@ router.get("/stats", getStats);
 router.get("/users", getUsers);
 router.patch("/users/:id", updateUserStatus);
 
-router.post("/categories", createCategory);
+router.post("/categories", validate(categorySchema), createCategory);
 router.put("/categories/:id", updateCategory);
 router.delete("/categories/:id", deleteCategory);
 
