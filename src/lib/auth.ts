@@ -17,7 +17,9 @@ export const auth = betterAuth({
     },
     emailVerification: {
         sendVerificationEmail: async ({ user, url }) => {
-            await sendVerificationEmail(user.email, url);
+            const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+            const verificationUrl = `${url}&callbackURL=${encodeURIComponent(frontendUrl + "/login?message=Email verified successfully!")}`;
+            await sendVerificationEmail(user.email, verificationUrl);
         },
     },
     session: {
