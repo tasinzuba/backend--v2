@@ -19,7 +19,6 @@ export const auth = betterAuth({
             const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
             const urlObj = new URL(url);
             urlObj.searchParams.set("callbackURL", `${frontendUrl}/login?message=Email verified successfully!`);
-
             await sendVerificationEmail(user.email, urlObj.toString());
         },
     },

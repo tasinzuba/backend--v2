@@ -18,22 +18,19 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-
 app.use(helmet());
 app.use(cors({
     origin: [process.env.FRONTEND_URL!, "http://localhost:3000"],
-    credentials: true
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"]
 }));
 
-
 app.use(compression());
-
-
 app.use((req, res, next) => {
     logger.info(`${req.method} ${req.url}`);
     next();
 });
-
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -41,10 +38,7 @@ const limiter = rateLimit({
     message: { success: false, error: "Too many requests, please try again later." }
 });
 app.use("/api", limiter);
-
-
 app.use(express.json());
-
 
 app.all("/api/auth/*", toNodeHandler(auth));
 app.use("/api/medicines", medicineRoutes);
