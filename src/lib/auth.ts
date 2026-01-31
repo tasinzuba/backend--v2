@@ -17,12 +17,12 @@ export const auth = betterAuth({
     },
     emailVerification: {
         sendVerificationEmail: async ({ user, url }) => {
-            // url-এ অলরেডি callbackURL থাকলে সেটি সরিয়ে নতুন করে সেট করা হচ্ছে
-            const cleanUrl = url.split('&callbackURL=')[0];
             const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
-            const finalUrl = `${cleanUrl}&callbackURL=${encodeURIComponent(frontendUrl + "/login?message=Email verified successfully!")}`;
+            // আগের কোনো callbackURL থাকলে তা ফেলে দিয়ে নতুন করে আমাদের ফ্রন্টএন্ড লিঙ্ক সেট করা হচ্ছে
+            const urlObj = new URL(url);
+            urlObj.searchParams.set("callbackURL", `${frontendUrl}/login?message=Email verified successfully!`);
 
-            await sendVerificationEmail(user.email, finalUrl);
+            await sendVerificationEmail(user.email, urlObj.toString());
         },
     },
     session: {
