@@ -25,10 +25,13 @@ export const auth = betterAuth({
     session: {
         expiresIn: 60 * 60 * 24 * 7,
         updateAge: 60 * 60 * 24,
+        cookieCache: {
+            enabled: true,
+            maxAge: 5 * 60
+        }
     },
     trustedOrigins: [process.env.FRONTEND_URL!, "http://localhost:3000"],
     advanced: {
-        cookiePrefix: "medistore",
         useSecureCookies: true,
     },
     user: {
