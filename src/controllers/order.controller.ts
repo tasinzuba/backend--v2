@@ -78,7 +78,7 @@ export const getMyOrders = async (req: AuthRequest, res: Response) => {
 export const getOrderById = async (req: AuthRequest, res: Response) => {
     try {
         const order = await prisma.order.findUnique({
-            where: { id: req.params.id },
+            where: { id: req.params.id as string },
             include: {
                 items: { include: { medicine: true } },
                 customer: { select: { id: true, name: true, email: true } },

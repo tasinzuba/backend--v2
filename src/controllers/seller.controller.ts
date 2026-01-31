@@ -56,13 +56,13 @@ export const getSellerMedicines = async (req: AuthRequest, res: Response) => {
 export const updateMedicine = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
-        const medicine = await prisma.medicine.findUnique({ where: { id } });
+        const medicine = await prisma.medicine.findUnique({ where: { id: id as string } });
 
         if (!medicine) return res.status(404).json(error("Medicine not found"));
         if (medicine.sellerId !== req.user!.id) return res.status(403).json(error("Forbidden"));
 
         const updated = await prisma.medicine.update({
-            where: { id },
+            where: { id: id as string },
             data: req.body,
             include: { category: true },
         });
@@ -76,12 +76,12 @@ export const updateMedicine = async (req: AuthRequest, res: Response) => {
 export const deleteMedicine = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
-        const medicine = await prisma.medicine.findUnique({ where: { id } });
+        const medicine = await prisma.medicine.findUnique({ where: { id: id as string } });
 
         if (!medicine) return res.status(404).json(error("Medicine not found"));
         if (medicine.sellerId !== req.user!.id) return res.status(403).json(error("Forbidden"));
 
-        await prisma.medicine.delete({ where: { id } });
+        await prisma.medicine.delete({ where: { id: id as string } });
 
         res.json(success(null, "Medicine deleted"));
     } catch (e) {
@@ -127,9 +127,9 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
         const { status } = req.body;
 
         const order = await prisma.order.findUnique({
-            where: { id },
+            where: { id: id as string },
             include: { items: { include: { medicine: true } } },
-        });
+        }) as any;
 
         if (!order) return res.status(404).json(error("Order not found"));
 
@@ -138,7 +138,7 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
         if (!hasItems) return res.status(403).json(error("Forbidden"));
 
         const updated = await prisma.order.update({
-            where: { id },
+            where: { id: id as string },
             data: { status },
         });
 

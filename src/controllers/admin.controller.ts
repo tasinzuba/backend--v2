@@ -50,12 +50,12 @@ export const updateUserStatus = async (req: AuthRequest, res: Response) => {
         const { id } = req.params;
         const { status } = req.body;
 
-        const user = await prisma.user.findUnique({ where: { id } });
+        const user = await prisma.user.findUnique({ where: { id: id as string } });
         if (!user) return res.status(404).json(error("User not found"));
         if (user.role === "ADMIN") return res.status(400).json(error("Cannot update admin"));
 
         const updated = await prisma.user.update({
-            where: { id },
+            where: { id: id as string },
             data: { status },
         });
 
@@ -81,7 +81,7 @@ export const updateCategory = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
         const category = await prisma.category.update({
-            where: { id },
+            where: { id: id as string },
             data: req.body,
         });
         res.json(success(category, "Category updated"));
@@ -92,7 +92,7 @@ export const updateCategory = async (req: AuthRequest, res: Response) => {
 
 export const deleteCategory = async (req: AuthRequest, res: Response) => {
     try {
-        await prisma.category.delete({ where: { id: req.params.id } });
+        await prisma.category.delete({ where: { id: req.params.id as string } });
         res.json(success(null, "Category deleted"));
     } catch (e) {
         res.status(500).json(error("Failed to delete category"));

@@ -68,9 +68,11 @@ app.get("/health", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.json({ name: "MediStore Backend", version: "2.0.0", env: process.env.NODE_ENV });
+    res.json({ name: "MediStore Backend -Working...." });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     logger.info(`Server running on http://localhost:${PORT}`);
 });
+
+export default app;

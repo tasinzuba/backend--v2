@@ -45,7 +45,7 @@ export const getAllMedicines = async (req: AuthRequest, res: Response) => {
 export const getMedicineById = async (req: AuthRequest, res: Response) => {
     try {
         const medicine = await prisma.medicine.findUnique({
-            where: { id: req.params.id },
+            where: { id: req.params.id as string },
             include: {
                 category: true,
                 seller: { select: { id: true, name: true } },
