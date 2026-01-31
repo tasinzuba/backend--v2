@@ -23,6 +23,7 @@ app.set("trust proxy", 1);
 const allowedOrigins = [
     process.env.FRONTEND_URL,
     "http://localhost:3000",
+    "https://frontend-v2-theta-two.vercel.app",
     "https://frontend-loz9g3ebd-tasinbis-projects.vercel.app"
 ].filter(Boolean) as string[];
 
