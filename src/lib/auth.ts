@@ -7,6 +7,7 @@ export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql",
     }),
+    baseURL: process.env.BETTER_AUTH_URL || "https://backend-v2-sb9v.vercel.app",
     emailAndPassword: {
         enabled: true,
         requireEmailVerification: true,
@@ -25,13 +26,25 @@ export const auth = betterAuth({
     session: {
         expiresIn: 60 * 60 * 24 * 7,
         updateAge: 60 * 60 * 24,
+        cookieCache: {
+            enabled: true,
+            maxAge: 5 * 60
+        }
     },
     trustedOrigins: [
-        process.env.FRONTEND_URL || "http://localhost:3000",
-        "http://localhost:3000"
+        process.env.FRONTEND_URL!,
+        "http://localhost:3000",
+        "https://frontend-loz9g3ebd-tasinbis-projects.vercel.app"
     ],
     advanced: {
         useSecureCookies: true,
         cookieSameSite: "None"
+    },
+    user: {
+        additionalFields: {
+            role: { type: "string", defaultValue: "CUSTOMER" },
+            status: { type: "string", defaultValue: "ACTIVE" },
+            phone: { type: "string", required: false },
+        }
     }
 });
