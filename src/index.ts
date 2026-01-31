@@ -18,11 +18,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.set("trust proxy", true);
+app.set("trust proxy", 1);
 
-app.use(helmet());
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
+
 app.use(cors({
-    origin: [process.env.FRONTEND_URL!, "http://localhost:3000"],
+    origin: [process.env.FRONTEND_URL || "http://localhost:3000", "http://localhost:3000"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"]

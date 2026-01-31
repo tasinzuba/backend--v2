@@ -25,20 +25,13 @@ export const auth = betterAuth({
     session: {
         expiresIn: 60 * 60 * 24 * 7,
         updateAge: 60 * 60 * 24,
-        cookieCache: {
-            enabled: true,
-            maxAge: 5 * 60
-        }
     },
-    trustedOrigins: [process.env.FRONTEND_URL!, "http://localhost:3000"],
+    trustedOrigins: [
+        process.env.FRONTEND_URL || "http://localhost:3000",
+        "http://localhost:3000"
+    ],
     advanced: {
         useSecureCookies: true,
-    },
-    user: {
-        additionalFields: {
-            role: { type: "string", defaultValue: "CUSTOMER" },
-            status: { type: "string", defaultValue: "ACTIVE" },
-            phone: { type: "string", required: false },
-        }
+        cookieSameSite: "None"
     }
 });
