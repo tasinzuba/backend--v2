@@ -7,7 +7,7 @@ export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql",
     }),
-    baseURL: "https://backend-v2-sb9v.vercel.app",
+    baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3001",
     emailAndPassword: {
         enabled: true,
         requireEmailVerification: true,
@@ -18,8 +18,9 @@ export const auth = betterAuth({
     emailVerification: {
         sendVerificationEmail: async ({ user, url }) => {
             const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
-            const verificationUrl = `${url}&callbackURL=${encodeURIComponent(frontendUrl + "/login?message=Email verified successfully!")}`;
-            await sendVerificationEmail(user.email, verificationUrl);
+            const vUrl = new URL(url);
+            vUrl.searchParams.set("callbackURL", frontendUrl + "/login?message=Email verified successfully!");
+            await sendVerificationEmail(user.email, vUrl.toString());
         },
     },
     session: {

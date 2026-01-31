@@ -59,7 +59,11 @@ export const updateMedicine = async (req: AuthRequest, res: Response) => {
         const medicine = await prisma.medicine.findUnique({ where: { id: id as string } });
 
         if (!medicine) return res.status(404).json(error("Medicine not found"));
-        if (medicine.sellerId !== req.user!.id) return res.status(403).json(error("Forbidden"));
+
+        // Allow if user is the seller OR if user is an ADMIN
+        if (medicine.sellerId !== req.user!.id && req.user!.role !== "ADMIN") {
+            return res.status(403).json(error("Forbidden"));
+        }
 
         const updated = await prisma.medicine.update({
             where: { id: id as string },
@@ -79,7 +83,11 @@ export const deleteMedicine = async (req: AuthRequest, res: Response) => {
         const medicine = await prisma.medicine.findUnique({ where: { id: id as string } });
 
         if (!medicine) return res.status(404).json(error("Medicine not found"));
-        if (medicine.sellerId !== req.user!.id) return res.status(403).json(error("Forbidden"));
+
+        // Allow if user is the seller OR if user is an ADMIN
+        if (medicine.sellerId !== req.user!.id && req.user!.role !== "ADMIN") {
+            return res.status(403).json(error("Forbidden"));
+        }
 
         await prisma.medicine.delete({ where: { id: id as string } });
 

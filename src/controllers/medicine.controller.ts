@@ -19,8 +19,8 @@ export const getAllMedicines = async (req: AuthRequest, res: Response) => {
         }
 
         if (category) where.categoryId = String(category);
-        if (minPrice) where.price = { ...where.price, gte: Number(minPrice) };
-        if (maxPrice) where.price = { ...where.price, lte: Number(maxPrice) };
+        if (minPrice && !isNaN(Number(minPrice))) where.price = { ...where.price, gte: Number(minPrice) };
+        if (maxPrice && !isNaN(Number(maxPrice))) where.price = { ...where.price, lte: Number(maxPrice) };
 
         const [medicines, total] = await Promise.all([
             prisma.medicine.findMany({
@@ -37,8 +37,9 @@ export const getAllMedicines = async (req: AuthRequest, res: Response) => {
         ]);
 
         res.json(success({ medicines, total, page: Number(page) || 1, limit: take }));
-    } catch (e) {
-        res.status(500).json(error("Failed to fetch medicines"));
+    } catch (e: any) {
+        console.error("Error in getAllMedicines:", e);
+        res.status(500).json(error(e.message || "Failed to fetch medicines"));
     }
 };
 
@@ -57,6 +58,7 @@ export const getMedicineById = async (req: AuthRequest, res: Response) => {
 
         res.json(success(medicine));
     } catch (e) {
+        console.error("Error in getMedicineById:", e);
         res.status(500).json(error("Failed to fetch medicine"));
     }
 };
@@ -70,6 +72,7 @@ export const getCategories = async (req: AuthRequest, res: Response) => {
 
         res.json(success(categories));
     } catch (e) {
+        console.error("Error in getCategories:", e);
         res.status(500).json(error("Failed to fetch categories"));
     }
 };

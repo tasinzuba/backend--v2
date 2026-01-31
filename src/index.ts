@@ -12,6 +12,7 @@ import medicineRoutes from "./routes/medicine.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 import sellerRoutes from "./routes/seller.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import reviewRoutes from "./routes/review.routes.js";
 
 dotenv.config();
 
@@ -42,6 +43,7 @@ app.use("/api/medicines", medicineRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/seller", sellerRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 app.get("/health", async (req, res) => {
     try {
