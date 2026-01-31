@@ -17,9 +17,12 @@ export const auth = betterAuth({
     },
     emailVerification: {
         sendVerificationEmail: async ({ user, url }) => {
+            // url-এ অলরেডি callbackURL থাকলে সেটি সরিয়ে নতুন করে সেট করা হচ্ছে
+            const cleanUrl = url.split('&callbackURL=')[0];
             const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
-            const verificationUrl = `${url}&callbackURL=${encodeURIComponent(frontendUrl + "/login?message=Email verified successfully!")}`;
-            await sendVerificationEmail(user.email, verificationUrl);
+            const finalUrl = `${cleanUrl}&callbackURL=${encodeURIComponent(frontendUrl + "/login?message=Email verified successfully!")}`;
+
+            await sendVerificationEmail(user.email, finalUrl);
         },
     },
     session: {
