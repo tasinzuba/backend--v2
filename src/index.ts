@@ -26,10 +26,10 @@ app.use(helmet({
 }));
 
 app.use(cors({
-    origin: ["https://frontend-loz9g3ebd-tasinbis-projects.vercel.app", "http://localhost:3000"],
+    origin: "https://frontend-loz9g3ebd-tasinbis-projects.vercel.app",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie", "Set-Cookie"]
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"]
 }));
 
 app.use(compression());

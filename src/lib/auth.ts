@@ -32,7 +32,7 @@ export const auth = betterAuth({
         }
     },
     trustedOrigins: [
-        process.env.FRONTEND_URL || "https://frontend-loz9g3ebd-tasinbis-projects.vercel.app",
+        "https://frontend-loz9g3ebd-tasinbis-projects.vercel.app",
         "http://localhost:3000"
     ],
     advanced: {
