@@ -20,33 +20,24 @@ const PORT = process.env.PORT || 3001;
 
 app.set("trust proxy", 1);
 
+app.use(cors({
+    origin: "https://frontend-loz9g3ebd-tasinbis-projects.vercel.app",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie", "x-requested-with"]
+}));
+
 app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
     contentSecurityPolicy: false
 }));
 
-app.use(cors({
-    origin: "https://frontend-loz9g3ebd-tasinbis-projects.vercel.app",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie"]
-}));
-
 app.use(compression());
-app.use((req, res, next) => {
-    logger.info(`${req.method} ${req.url}`);
-    next();
-});
-
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 200,
-    message: { success: false, error: "Too many requests" }
-});
-app.use("/api", limiter);
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.all("/api/auth/*", toNodeHandler(auth));
+
 app.use("/api/medicines", medicineRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/seller", sellerRoutes);
@@ -55,14 +46,14 @@ app.use("/api/admin", adminRoutes);
 app.get("/health", async (req, res) => {
     try {
         await prisma.$queryRaw`SELECT 1`;
-        res.json({ status: "ok" });
+        res.status(200).json({ status: "ok" });
     } catch (e) {
         res.status(503).json({ status: "error" });
     }
 });
 
 app.get("/", (req, res) => {
-    res.json({ name: "MediStore Backend" });
+    res.json({ message: "MediStore API is running" });
 });
 
 if (process.env.NODE_ENV !== "production") {

@@ -7,7 +7,7 @@ export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql",
     }),
-    baseURL: process.env.BETTER_AUTH_URL || "https://backend-v2-sb9v.vercel.app",
+    baseURL: "https://backend-v2-sb9v.vercel.app",
     emailAndPassword: {
         enabled: true,
         requireEmailVerification: true,
@@ -17,7 +17,7 @@ export const auth = betterAuth({
     },
     emailVerification: {
         sendVerificationEmail: async ({ user, url }) => {
-            const frontendUrl = process.env.FRONTEND_URL || "https://frontend-loz9g3ebd-tasinbis-projects.vercel.app";
+            const frontendUrl = "https://frontend-loz9g3ebd-tasinbis-projects.vercel.app";
             const urlObj = new URL(url);
             urlObj.searchParams.set("callbackURL", `${frontendUrl}/login?message=Email verified successfully!`);
             await sendVerificationEmail(user.email, urlObj.toString());
@@ -26,24 +26,17 @@ export const auth = betterAuth({
     session: {
         expiresIn: 60 * 60 * 24 * 7,
         updateAge: 60 * 60 * 24,
-        cookieCache: {
-            enabled: true,
-            maxAge: 5 * 60
-        }
     },
     trustedOrigins: [
-        "https://frontend-loz9g3ebd-tasinbis-projects.vercel.app",
-        "http://localhost:3000"
+        "https://frontend-loz9g3ebd-tasinbis-projects.vercel.app"
     ],
     advanced: {
         useSecureCookies: true,
-        cookieSameSite: "None",
+        cookieSameSite: "None"
     },
     user: {
         additionalFields: {
             role: { type: "string", defaultValue: "CUSTOMER" },
-            status: { type: "string", defaultValue: "ACTIVE" },
-            phone: { type: "string", required: false },
         }
     }
 });
