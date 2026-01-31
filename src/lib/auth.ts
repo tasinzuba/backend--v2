@@ -17,26 +17,34 @@ export const auth = betterAuth({
     },
     emailVerification: {
         sendVerificationEmail: async ({ user, url }) => {
-            const frontendUrl = "https://frontend-loz9g3ebd-tasinbis-projects.vercel.app";
-            const urlObj = new URL(url);
-            urlObj.searchParams.set("callbackURL", `${frontendUrl}/login?message=Email verified successfully!`);
-            await sendVerificationEmail(user.email, urlObj.toString());
+            const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+            const verificationUrl = `${url}&callbackURL=${encodeURIComponent(frontendUrl + "/login?message=Email verified successfully!")}`;
+            await sendVerificationEmail(user.email, verificationUrl);
         },
     },
     session: {
         expiresIn: 60 * 60 * 24 * 7,
         updateAge: 60 * 60 * 24,
+        cookieCache: {
+            enabled: true,
+            maxAge: 5 * 60
+        }
     },
     trustedOrigins: [
+        process.env.FRONTEND_URL || "http://localhost:3000",
         "https://frontend-loz9g3ebd-tasinbis-projects.vercel.app"
     ],
     advanced: {
         useSecureCookies: true,
-        cookieSameSite: "None"
+        cookiePrefix: "medistore",
+        cookieSameSite: "None",
+        crossTabSessionSync: true
     },
     user: {
         additionalFields: {
             role: { type: "string", defaultValue: "CUSTOMER" },
+            status: { type: "string", defaultValue: "ACTIVE" },
+            phone: { type: "string", required: false },
         }
     }
 });
