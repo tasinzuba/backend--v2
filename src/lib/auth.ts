@@ -34,6 +34,11 @@ export const auth = betterAuth({
     advanced: {
         useSecureCookies: true,
     },
+    secondaryStorage: {
+        get: async (key) => null,
+        set: async (key, value) => { },
+        delete: async (key) => { }
+    },
     user: {
         additionalFields: {
             role: { type: "string", defaultValue: "CUSTOMER" },
