@@ -5,13 +5,13 @@ import helmet from "helmet";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
 import { toNodeHandler } from "better-auth/node";
-import { auth } from "./lib/auth";
-import { logger } from "./lib/logger";
-import { prisma } from "./lib/prisma";
-import medicineRoutes from "./routes/medicine.routes";
-import orderRoutes from "./routes/order.routes";
-import sellerRoutes from "./routes/seller.routes";
-import adminRoutes from "./routes/admin.routes";
+import { auth } from "./lib/auth.js";
+import { logger } from "./lib/logger.js";
+import { prisma } from "./lib/prisma.js";
+import medicineRoutes from "./routes/medicine.routes.js";
+import orderRoutes from "./routes/order.routes.js";
+import sellerRoutes from "./routes/seller.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
 dotenv.config();
 

@@ -6,10 +6,10 @@ import {
     createCategory,
     updateCategory,
     deleteCategory
-} from "../controllers/admin.controller";
-import { authMiddleware, roleMiddleware } from "../middleware/auth.middleware";
-import { validate } from "../middleware/validation.middleware";
-import { categorySchema } from "../validators/schemas";
+} from "../controllers/admin.controller.js";
+import { authMiddleware, roleMiddleware } from "../middleware/auth.middleware.js";
+import { validate } from "../middleware/validation.middleware.js";
+import { categorySchema } from "../validators/schemas.js";
 
 const router = Router();
 

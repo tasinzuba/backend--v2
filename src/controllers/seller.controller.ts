@@ -1,8 +1,8 @@
 import { Response } from "express";
-import { prisma } from "../lib/prisma";
-import { AuthRequest } from "../middleware/auth.middleware";
-import { success, error } from "../utils/response";
-import { paginate } from "../utils/pagination";
+import { prisma } from "../lib/prisma.js";
+import { AuthRequest } from "../middleware/auth.middleware.js";
+import { success, error } from "../utils/response.js";
+import { paginate } from "../utils/pagination.js";
 
 export const addMedicine = async (req: AuthRequest, res: Response) => {
     try {

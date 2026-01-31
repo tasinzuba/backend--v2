@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { createOrder, getMyOrders, getOrderById } from "../controllers/order.controller";
-import { authMiddleware } from "../middleware/auth.middleware";
-import { validate } from "../middleware/validation.middleware";
-import { orderSchema } from "../validators/schemas";
+import { createOrder, getMyOrders, getOrderById } from "../controllers/order.controller.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
+import { validate } from "../middleware/validation.middleware.js";
+import { orderSchema } from "../validators/schemas.js";
 
 const router = Router();
 

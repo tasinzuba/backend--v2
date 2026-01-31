@@ -6,10 +6,10 @@ import {
     deleteMedicine,
     getSellerOrders,
     updateOrderStatus
-} from "../controllers/seller.controller";
-import { authMiddleware, roleMiddleware } from "../middleware/auth.middleware";
-import { validate } from "../middleware/validation.middleware";
-import { medicineSchema } from "../validators/schemas";
+} from "../controllers/seller.controller.js";
+import { authMiddleware, roleMiddleware } from "../middleware/auth.middleware.js";
+import { validate } from "../middleware/validation.middleware.js";
+import { medicineSchema } from "../validators/schemas.js";
 
 const router = Router();
 
