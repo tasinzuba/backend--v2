@@ -21,14 +21,15 @@ const PORT = process.env.PORT || 3001;
 app.set("trust proxy", 1);
 
 app.use(helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" }
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    contentSecurityPolicy: false
 }));
 
 app.use(cors({
-    origin: [process.env.FRONTEND_URL || "http://localhost:3000", "http://localhost:3000"],
+    origin: ["https://frontend-loz9g3ebd-tasinbis-projects.vercel.app", "http://localhost:3000"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie"]
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie", "Set-Cookie"]
 }));
 
 app.use(compression());
@@ -39,8 +40,8 @@ app.use((req, res, next) => {
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 100,
-    message: { success: false, error: "Too many requests, please try again later." }
+    max: 200,
+    message: { success: false, error: "Too many requests" }
 });
 app.use("/api", limiter);
 app.use(express.json());
@@ -54,23 +55,14 @@ app.use("/api/admin", adminRoutes);
 app.get("/health", async (req, res) => {
     try {
         await prisma.$queryRaw`SELECT 1`;
-        res.json({
-            status: "ok",
-            timestamp: new Date().toISOString(),
-            database: "connected"
-        });
+        res.json({ status: "ok" });
     } catch (e) {
-        logger.error("Health check failed", e);
-        res.status(503).json({
-            status: "error",
-            timestamp: new Date().toISOString(),
-            database: "disconnected"
-        });
+        res.status(503).json({ status: "error" });
     }
 });
 
 app.get("/", (req, res) => {
-    res.json({ name: "MediStore Backend -Working...." });
+    res.json({ name: "MediStore Backend" });
 });
 
 if (process.env.NODE_ENV !== "production") {
