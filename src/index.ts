@@ -71,8 +71,10 @@ app.get("/", (req, res) => {
     res.json({ name: "MediStore Backend -Working...." });
 });
 
-const server = app.listen(PORT, () => {
-    logger.info(`Server running on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== "production") {
+    app.listen(PORT, () => {
+        logger.info(`Server running on http://localhost:${PORT}`);
+    });
+}
 
 export default app;
