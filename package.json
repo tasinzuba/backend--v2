@@ -1,6 +1,7 @@
 {
     "name": "medistore-backend-v2",
     "version": "2.0.0",
+    "type": "module",
     "description": "Assigment 4 - MediStore with Better Auth and Nodemailer",
     "main": "dist/index.js",
     "scripts": {
