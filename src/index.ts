@@ -18,20 +18,23 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Security Middleware
-app.use(helmet());
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 
-// Performance Middleware
+app.use(helmet());
+app.use(cors({
+    origin: [process.env.FRONTEND_URL!, "http://localhost:3000"],
+    credentials: true
+}));
+
+
 app.use(compression());
 
-// Request logging middleware
+
 app.use((req, res, next) => {
     logger.info(`${req.method} ${req.url}`);
     next();
 });
 
-// Rate Limiting
+
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
@@ -39,10 +42,10 @@ const limiter = rateLimit({
 });
 app.use("/api", limiter);
 
-// Body Parsing
+
 app.use(express.json());
 
-// Routes
+
 app.all("/api/auth/*", toNodeHandler(auth));
 app.use("/api/medicines", medicineRoutes);
 app.use("/api/orders", orderRoutes);
