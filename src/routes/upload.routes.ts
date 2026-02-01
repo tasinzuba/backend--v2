@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { upload, uploadImage, uploadMultipleImages, deleteImage, handleMulterError } from '../controllers/upload.controller.js';
+import { uploadImage, uploadMultipleImages, deleteImage, handleMulterError } from '../controllers/upload.controller.js';
+import { upload } from '../lib/cloudinary.js';
 import { requireAuth } from '../middleware/auth.middleware.js';
 
 const router = Router();
