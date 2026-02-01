@@ -44,6 +44,9 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/seller", sellerRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/reviews", reviewRoutes);
+import uploadRoutes from "./routes/upload.routes.js";
+app.use("/api/upload", uploadRoutes);
+app.use("/uploads", express.static("uploads"));
 
 app.get("/health", async (req, res) => {
     try {

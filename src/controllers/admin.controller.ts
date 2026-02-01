@@ -98,3 +98,45 @@ export const deleteCategory = async (req: AuthRequest, res: Response) => {
         res.status(500).json(error("Failed to delete category"));
     }
 };
+
+export const getOrders = async (req: AuthRequest, res: Response) => {
+    try {
+        const { page, limit } = req.query;
+        const { skip, take } = paginate(Number(page), Number(limit));
+
+        const [orders, total] = await Promise.all([
+            prisma.order.findMany({
+                skip,
+                take,
+                orderBy: { createdAt: "desc" },
+                include: { customer: { select: { name: true, email: true } } }
+            }),
+            prisma.order.count(),
+        ]);
+
+        res.json(success({ orders, total }));
+    } catch (e) {
+        res.status(500).json(error("Failed to fetch orders"));
+    }
+};
+
+export const getAllMedicines = async (req: AuthRequest, res: Response) => {
+    try {
+        const { page, limit } = req.query;
+        const { skip, take } = paginate(Number(page), Number(limit));
+
+        const [medicines, total] = await Promise.all([
+            prisma.medicine.findMany({
+                skip,
+                take,
+                orderBy: { createdAt: "desc" },
+                include: { category: true, seller: { select: { name: true } } }
+            }),
+            prisma.medicine.count(),
+        ]);
+
+        res.json(success({ medicines, total }));
+    } catch (e) {
+        res.status(500).json(error("Failed to fetch medicines"));
+    }
+};

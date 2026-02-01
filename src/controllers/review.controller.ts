@@ -8,8 +8,7 @@ export const createReview = async (req: AuthRequest, res: Response) => {
         const { medicineId, rating, comment } = req.body;
         const customerId = req.user!.id;
 
-        // Check if user bought the medicine (optional but good)
-        /*
+        // Check if user bought the medicine
         const order = await prisma.order.findFirst({
             where: {
                 customerId,
@@ -18,7 +17,6 @@ export const createReview = async (req: AuthRequest, res: Response) => {
             }
         });
         if (!order) return res.status(403).json(error("You can only review medicines you have purchased and received."));
-        */
 
         const review = await prisma.review.upsert({
             where: {

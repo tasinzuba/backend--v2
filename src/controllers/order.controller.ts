@@ -95,3 +95,33 @@ export const getOrderById = async (req: AuthRequest, res: Response) => {
         res.status(500).json(error("Failed to fetch order"));
     }
 };
+export const cancelOrder = async (req: AuthRequest, res: Response) => {
+    try {
+        const { id } = req.params;
+        const order = await prisma.order.findUnique({
+            where: { id: id as string },
+            include: { items: true }
+        });
+
+        if (!order) return res.status(404).json(error("Order not found"));
+        if (order.customerId !== req.user!.id) return res.status(403).json(error("Unauthorized"));
+        if (order.status !== "PENDING") return res.status(400).json(error("Only pending orders can be cancelled"));
+
+        // Restock items
+        await Promise.all(order.items.map(item =>
+            prisma.medicine.update({
+                where: { id: item.medicineId },
+                data: { stock: { increment: item.quantity } }
+            })
+        ));
+
+        const updated = await prisma.order.update({
+            where: { id: id as string },
+            data: { status: "CANCELLED" }
+        });
+
+        res.json(success(updated, "Order cancelled"));
+    } catch (e) {
+        res.status(500).json(error("Failed to cancel order"));
+    }
+};

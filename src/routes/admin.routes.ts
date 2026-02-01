@@ -5,7 +5,9 @@ import {
     updateUserStatus,
     createCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory,
+    getOrders,
+    getAllMedicines
 } from "../controllers/admin.controller.js";
 import { authMiddleware, roleMiddleware } from "../middleware/auth.middleware.js";
 import { validate } from "../middleware/validation.middleware.js";
@@ -22,5 +24,7 @@ router.patch("/users/:id", updateUserStatus);
 router.post("/categories", validate(categorySchema), createCategory);
 router.put("/categories/:id", updateCategory);
 router.delete("/categories/:id", deleteCategory);
+router.get("/orders", getOrders);
+router.get("/medicines", getAllMedicines);
 
 export default router;
