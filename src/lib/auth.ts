@@ -33,9 +33,9 @@ export const auth = betterAuth({
         }
     },
     trustedOrigins: [
-        process.env.FRONTEND_URL || "https://frontend-one-orpin-24.vercel.app",
         "https://frontend-one-orpin-24.vercel.app",
-    ],
+        process.env.FRONTEND_URL,
+    ].filter(Boolean) as string[],
     advanced: {
         useSecureCookies: true,
         cookiePrefix: "better-auth",
