@@ -36,7 +36,13 @@ export const getAllMedicines = async (req: AuthRequest, res: Response) => {
             prisma.medicine.count({ where }),
         ]);
 
-        res.json(success({ medicines, total, page: Number(page) || 1, limit: take }));
+        const backendUrl = process.env.BETTER_AUTH_URL || `http://${req.headers.host}`;
+        const mappedMedicines = medicines.map(med => ({
+            ...med,
+            image: med.image?.replace("http://localhost:3001", backendUrl.replace(/\/$/, ""))
+        }));
+
+        res.json(success({ medicines: mappedMedicines, total, page: Number(page) || 1, limit: take }));
     } catch (e: any) {
         console.error("Error in getAllMedicines:", e);
         res.status(500).json(error(e.message || "Failed to fetch medicines"));
@@ -56,7 +62,13 @@ export const getMedicineById = async (req: AuthRequest, res: Response) => {
 
         if (!medicine) return res.status(404).json(error("Medicine not found"));
 
-        res.json(success(medicine));
+        const backendUrl = process.env.BETTER_AUTH_URL || `http://${req.headers.host}`;
+        const mappedMedicine = {
+            ...medicine,
+            image: medicine.image?.replace("http://localhost:3001", backendUrl.replace(/\/$/, ""))
+        };
+
+        res.json(success(mappedMedicine));
     } catch (e) {
         console.error("Error in getMedicineById:", e);
         res.status(500).json(error("Failed to fetch medicine"));
@@ -70,7 +82,13 @@ export const getCategories = async (req: AuthRequest, res: Response) => {
             orderBy: { name: "asc" },
         });
 
-        res.json(success(categories));
+        const backendUrl = process.env.BETTER_AUTH_URL || `http://${req.headers.host}`;
+        const mappedCategories = categories.map(cat => ({
+            ...cat,
+            image: cat.image?.replace("http://localhost:3001", backendUrl.replace(/\/$/, ""))
+        }));
+
+        res.json(success(mappedCategories));
     } catch (e) {
         console.error("Error in getCategories:", e);
         res.status(500).json(error("Failed to fetch categories"));

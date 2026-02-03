@@ -39,7 +39,12 @@ export const auth = betterAuth({
         useSecureCookies: true,
         cookiePrefix: "better-auth",
         crossSubDomainCookies: {
-            enabled: false, // যেহেতু ডোমেইন আলাদা, তাই এটি ফলস থাকাই ভালো
+            enabled: false,
+        },
+        cookieOptions: {
+            sameSite: "none",
+            secure: true,
+            httpOnly: true,
         },
         disableCSRFCheck: true,
     },
