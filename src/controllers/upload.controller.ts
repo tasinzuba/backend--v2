@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { cloudinary } from '../lib/cloudinary.js';
 
-// Upload controller
+
 export const uploadImage = async (req: Request, res: Response) => {
     try {
         if (!req.file) {
@@ -11,8 +11,6 @@ export const uploadImage = async (req: Request, res: Response) => {
             });
         }
 
-        // Cloudinary returns the file URL in `path` or `secure_url`
-        // With multer-storage-cloudinary, req.file.path is the remote URL
         const imageUrl = req.file.path;
 
         res.json({
@@ -34,7 +32,7 @@ export const uploadImage = async (req: Request, res: Response) => {
     }
 };
 
-// Upload multiple images
+
 export const uploadMultipleImages = async (req: Request, res: Response) => {
     try {
         if (!req.files || (req.files as Express.Multer.File[]).length === 0) {
@@ -49,7 +47,7 @@ export const uploadMultipleImages = async (req: Request, res: Response) => {
             originalName: file.originalname,
             size: file.size,
             mimetype: file.mimetype,
-            url: file.path // Cloudinary URL
+            url: file.path
         }));
 
         res.json({
@@ -65,23 +63,17 @@ export const uploadMultipleImages = async (req: Request, res: Response) => {
     }
 };
 
-// Delete image
+
 export const deleteImage = async (req: Request, res: Response) => {
     try {
         const { filename } = req.params;
 
-        // Ensure filename is provided
         if (!filename) {
             return res.status(400).json({ success: false, error: 'Filename is required' });
         }
 
-        // For Cloudinary, we need the public_id.
-        // Assuming filename passed here is the public_id or we need to extract it.
-        // However, standard delete might differ.
-        // Let's assume the frontend passes the public_id or we parse it from URL if stored differently.
-        // For simplicity in this setup, let's try to delete by the "filename" which is usually the public_id in Cloudinary storage.
-
-        await cloudinary.uploader.destroy(filename);
+        const publicId = Array.isArray(filename) ? filename[0] : filename;
+        await cloudinary.uploader.destroy(publicId);
 
         res.json({
             success: true,
@@ -96,7 +88,7 @@ export const deleteImage = async (req: Request, res: Response) => {
     }
 };
 
-// Error handling middleware for multer
+
 export const handleMulterError = (err: any, req: Request, res: Response, next: any) => {
     if (err) {
         return res.status(400).json({
