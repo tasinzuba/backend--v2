@@ -46,7 +46,6 @@ export const auth = betterAuth({
             sameSite: "none",
             secure: true,
             httpOnly: true,
-            domain: ".vercel.app",
         },
         disableCSRFCheck: true,
     },
