@@ -21,25 +21,8 @@ const PORT = process.env.PORT || 3001;
 
 app.set("trust proxy", 1);
 
-const allowedOrigins = [
-    process.env.FRONTEND_URL || "http://localhost:3000",
-    process.env.PROD_FRONTEND_URL,
-].filter(Boolean);
-
 app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin) return callback(null, true);
-
-        const isAllowed =
-            allowedOrigins.includes(origin) ||
-            /^https:\/\/.*\.vercel\.app$/.test(origin);
-
-        if (isAllowed) {
-            callback(null, true);
-        } else {
-            callback(new Error(`Origin ${origin} not allowed by CORS`));
-        }
-    },
+    origin: true,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
