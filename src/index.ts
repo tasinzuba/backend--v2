@@ -38,12 +38,14 @@ app.options("*", (req, res) => {
     res.sendStatus(200);
 });
 
+/* 
 app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
     contentSecurityPolicy: false,
     crossOriginOpenerPolicy: false,
     crossOriginEmbedderPolicy: false
 }));
+*/
 
 app.use(compression());
 app.use(express.json());
