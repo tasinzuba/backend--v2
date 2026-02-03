@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { bearer } from "better-auth/plugins";
 import { prisma } from "./prisma.js";
 import { sendVerificationEmail, sendPasswordResetEmail } from "./email.js";
 
@@ -42,6 +43,9 @@ export const auth = betterAuth({
         },
         disableCSRFCheck: true,
     },
+     plugins: [
+        bearer()
+    ],
     user: {
         additionalFields: {
             role: { type: "string", defaultValue: "CUSTOMER" },

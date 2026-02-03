@@ -19,23 +19,39 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    "http://localhost:3000"
+].filter(Boolean);
+
 app.set("trust proxy", 1);
 
-// Manual CORS Middleware
-app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    res.setHeader("Access-Control-Allow-Origin", origin || "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Cookie, x-requested-with, accept");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Max-Age", "86400"); // 24 hours
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
 
-    if (req.method === "OPTIONS") {
-        return res.status(200).end();
-    }
-    next();
-});
+        const isAllowed = allowedOrigins.some(allowed => origin === allowed) ||
+            origin.endsWith(".vercel.app");
 
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie", "x-requested-with", "accept"],
+    exposedHeaders: ["Set-Cookie"],
+    maxAge: 86400
+}));
+
+app.options("*", cors());
+
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    contentSecurityPolicy: false
+}));
 
 app.use(compression());
 app.use(express.json());
@@ -62,7 +78,7 @@ app.get("/health", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.json({ message: "MediStore API is running" });
+    res.json({ message: "MediStore App Backend is running" });
 });
 
 if (process.env.NODE_ENV !== "production") {
