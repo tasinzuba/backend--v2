@@ -19,39 +19,30 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-const allowedOrigins = [
-    process.env.FRONTEND_URL,
-    "http://localhost:3000"
-].filter(Boolean);
-
 app.set("trust proxy", 1);
 
 app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin) return callback(null, true);
-
-        const cleanOrigin = origin.replace(/\/$/, "");
-        const isAllowed = allowedOrigins.some(allowed => allowed?.replace(/\/$/, "") === cleanOrigin) ||
-            cleanOrigin.endsWith(".vercel.app");
-
-        if (isAllowed) {
-            callback(null, true);
-        } else {
-            callback(null, true);
-        }
-    },
+    origin: true,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie", "x-requested-with", "accept"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie", "x-requested-with", "accept", "origin"],
     exposedHeaders: ["Set-Cookie"],
     maxAge: 86400
 }));
 
-app.options("*", cors());
+app.options("*", (req, res) => {
+    res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Cookie, x-requested-with, accept, origin");
+    res.sendStatus(200);
+});
 
 app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
-    contentSecurityPolicy: false
+    contentSecurityPolicy: false,
+    crossOriginOpenerPolicy: false,
+    crossOriginEmbedderPolicy: false
 }));
 
 app.use(compression());
