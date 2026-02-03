@@ -51,7 +51,10 @@ app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.all("/api/auth/*", toNodeHandler(auth));
+app.all("/api/auth/*", (req, res, next) => {
+    console.log(`Auth Request: ${req.method} ${req.url} - Origin: ${req.headers.origin}`);
+    return toNodeHandler(auth)(req, res);
+});
 
 app.use("/api/medicines", medicineRoutes);
 app.use("/api/orders", orderRoutes);
