@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import compression from "compression";
-import rateLimit from "express-rate-limit";
+import uploadRoutes from "./routes/upload.routes.js";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth.js";
 import { logger } from "./lib/logger.js";
@@ -21,11 +21,29 @@ const PORT = process.env.PORT || 3001;
 
 app.set("trust proxy", 1);
 
+const allowedOrigins = [
+    process.env.FRONTEND_URL || "http://localhost:3000",
+    process.env.PROD_FRONTEND_URL,
+].filter(Boolean);
+
 app.use(cors({
-    origin: true,
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+
+        const isAllowed =
+            allowedOrigins.includes(origin) ||
+            /^https:\/\/.*\.vercel\.app$/.test(origin);
+
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            callback(new Error(`Origin ${origin} not allowed by CORS`));
+        }
+    },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie", "x-requested-with"]
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+    exposedHeaders: ["Set-Cookie"],
 }));
 
 app.use(helmet({
@@ -44,7 +62,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/seller", sellerRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/reviews", reviewRoutes);
-import uploadRoutes from "./routes/upload.routes.js";
+
 app.use("/api/upload", uploadRoutes);
 app.use("/uploads", express.static("uploads"));
 
