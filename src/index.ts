@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import helmet from "helmet";
 import compression from "compression";
 import uploadRoutes from "./routes/upload.routes.js";
 import { toNodeHandler } from "better-auth/node";
@@ -38,30 +37,20 @@ app.options("*", (req, res) => {
     res.sendStatus(200);
 });
 
-/* 
-app.use(helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-    contentSecurityPolicy: false,
-    crossOriginOpenerPolicy: false,
-    crossOriginEmbedderPolicy: false
-}));
-*/
-
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.all("/api/auth/*", (req, res, next) => {
-    console.log(`Auth Request: ${req.method} ${req.url} - Origin: ${req.headers.origin}`);
+app.all("/api/auth/*", (req, res) => {
     return toNodeHandler(auth)(req, res);
 });
+
 
 app.use("/api/medicines", medicineRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/seller", sellerRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/reviews", reviewRoutes);
-
 app.use("/api/upload", uploadRoutes);
 app.use("/uploads", express.static("uploads"));
 
