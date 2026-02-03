@@ -63,6 +63,17 @@ app.get("/health", async (req, res) => {
     }
 });
 
+app.get("/api/debug-env", (req, res) => {
+    res.json({
+        NODE_ENV: process.env.NODE_ENV,
+        BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+        FRONTEND_URL: process.env.FRONTEND_URL,
+        Has_Secret: !!process.env.BETTER_AUTH_SECRET,
+        Origin: req.headers.origin,
+        Host: req.headers.host
+    });
+});
+
 app.get("/", (req, res) => {
     res.json({ message: "MediStore App Backend is running" });
 });
