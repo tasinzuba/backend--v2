@@ -22,7 +22,12 @@ const PORT = process.env.PORT || 3001;
 app.set("trust proxy", 1);
 
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+    const origin = req.headers.origin;
+    if (origin) {
+        res.header("Access-Control-Allow-Origin", origin);
+    } else {
+        res.header("Access-Control-Allow-Origin", "*");
+    }
     res.header("Access-Control-Allow-Credentials", "true");
     res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH,OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Cookie, x-requested-with");
