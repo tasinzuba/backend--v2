@@ -33,7 +33,8 @@ export const auth = betterAuth({
         }
     },
     trustedOrigins: [
-        process.env.FRONTEND_URL || "http://localhost:3000",
+        process.env.FRONTEND_URL || "https://frontend-one-orpin-24.vercel.app",
+        "https://frontend-one-orpin-24.vercel.app",
     ],
     advanced: {
         useSecureCookies: true,

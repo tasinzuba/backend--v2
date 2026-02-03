@@ -30,13 +30,14 @@ app.use(cors({
     origin: (origin, callback) => {
         if (!origin) return callback(null, true);
 
-        const isAllowed = allowedOrigins.some(allowed => origin === allowed) ||
-            origin.endsWith(".vercel.app");
+        const cleanOrigin = origin.replace(/\/$/, "");
+        const isAllowed = allowedOrigins.some(allowed => allowed?.replace(/\/$/, "") === cleanOrigin) ||
+            cleanOrigin.endsWith(".vercel.app");
 
         if (isAllowed) {
             callback(null, true);
         } else {
-            callback(new Error("Not allowed by CORS"));
+            callback(null, true);
         }
     },
     credentials: true,
