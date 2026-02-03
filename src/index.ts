@@ -21,20 +21,26 @@ const PORT = process.env.PORT || 3001;
 
 app.set("trust proxy", 1);
 
-app.use(cors({
-    origin: (origin, callback) => {
-        // সব অরিজিন এলাও করা হচ্ছে প্রোডাকশনের জন্য
-        callback(null, true);
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie", "x-requested-with"],
-    exposedHeaders: ["Set-Cookie"]
-}));
+// Manual CORS Middleware
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    res.setHeader("Access-Control-Allow-Origin", origin || "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, Cookie, x-requested-with, accept");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Max-Age", "86400"); // 24 hours
+
+    if (req.method === "OPTIONS") {
+        return res.status(200).end();
+    }
+    next();
+});
 
 app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
-    contentSecurityPolicy: false
+    contentSecurityPolicy: false,
+    crossOriginOpenerPolicy: false,
+    crossOriginEmbedderPolicy: false
 }));
 
 app.use(compression());
