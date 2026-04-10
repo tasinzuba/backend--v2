@@ -81,11 +81,37 @@ async function main() {
         },
     });
 
+    const managerUser = await prisma.user.upsert({
+        where: { email: "manager@medistore.com" },
+        update: { role: "MANAGER" },
+        create: {
+            name: "Karim Hossain",
+            email: "manager@medistore.com",
+            emailVerified: true,
+            role: "MANAGER",
+            status: "ACTIVE",
+            phone: "+880 1700000006",
+        },
+    });
+
+    const pharmacistUser = await prisma.user.upsert({
+        where: { email: "pharmacist@medistore.com" },
+        update: { role: "PHARMACIST" },
+        create: {
+            name: "Dr. Nusrat Jahan",
+            email: "pharmacist@medistore.com",
+            emailVerified: true,
+            role: "PHARMACIST",
+            status: "ACTIVE",
+            phone: "+880 1700000007",
+        },
+    });
+
     // Create accounts with hashed passwords (better-auth compatible)
     const defaultPassword = hashPassword("password123");
     const adminPassword = hashPassword("admin123");
 
-    for (const user of [adminUser, sellerUser, seller2, customerUser, customer2]) {
+    for (const user of [adminUser, sellerUser, seller2, customerUser, customer2, managerUser, pharmacistUser]) {
         await prisma.account.upsert({
             where: {
                 id: `account-${user.id}`,
@@ -108,6 +134,8 @@ async function main() {
     console.log("  ✅ Seller 2: seller2@medistore.com / password123");
     console.log("  ✅ Customer: customer@medistore.com / password123");
     console.log("  ✅ Customer 2: customer2@medistore.com / password123");
+    console.log("  ✅ Manager: manager@medistore.com / password123");
+    console.log("  ✅ Pharmacist: pharmacist@medistore.com / password123");
 
     // ===================== CATEGORIES =====================
     console.log("\n📂 Creating categories...");
@@ -299,21 +327,23 @@ async function main() {
     console.log(`  ✅ Created ${reviewData.length} reviews`);
 
     // ===================== SUMMARY =====================
-    console.log("\n" + "=".repeat(50));
+    console.log("\n" + "=".repeat(55));
     console.log("🎉 DATABASE SEEDING COMPLETE!");
-    console.log("=".repeat(50));
+    console.log("=".repeat(55));
     console.log("\n📋 LOGIN CREDENTIALS:");
-    console.log("┌─────────────┬──────────────────────────┬──────────────┐");
-    console.log("│ Role        │ Email                    │ Password     │");
-    console.log("├─────────────┼──────────────────────────┼──────────────┤");
-    console.log("│ ADMIN       │ admin@medistore.com      │ admin123     │");
-    console.log("│ SELLER      │ seller@medistore.com     │ password123  │");
-    console.log("│ SELLER      │ seller2@medistore.com    │ password123  │");
-    console.log("│ CUSTOMER    │ customer@medistore.com   │ password123  │");
-    console.log("│ CUSTOMER    │ customer2@medistore.com  │ password123  │");
-    console.log("└─────────────┴──────────────────────────┴──────────────┘");
+    console.log("┌──────────────┬───────────────────────────────┬──────────────┐");
+    console.log("│ Role         │ Email                         │ Password     │");
+    console.log("├──────────────┼───────────────────────────────┼──────────────┤");
+    console.log("│ ADMIN        │ admin@medistore.com           │ admin123     │");
+    console.log("│ SELLER       │ seller@medistore.com          │ password123  │");
+    console.log("│ SELLER       │ seller2@medistore.com         │ password123  │");
+    console.log("│ CUSTOMER     │ customer@medistore.com        │ password123  │");
+    console.log("│ CUSTOMER     │ customer2@medistore.com       │ password123  │");
+    console.log("│ MANAGER      │ manager@medistore.com         │ password123  │");
+    console.log("│ PHARMACIST   │ pharmacist@medistore.com      │ password123  │");
+    console.log("└──────────────┴───────────────────────────────┴──────────────┘");
     console.log("\n📊 Seeded Data:");
-    console.log(`   • 5 Users (1 Admin, 2 Sellers, 2 Customers)`);
+    console.log(`   • 7 Users (1 Admin, 2 Sellers, 2 Customers, 1 Manager, 1 Pharmacist)`);
     console.log(`   • ${categories.length} Categories`);
     console.log(`   • ${medicines.length} Medicines`);
     console.log(`   • 5 Orders`);

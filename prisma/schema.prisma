@@ -158,6 +158,8 @@ enum Role {
   CUSTOMER
   SELLER
   ADMIN
+  MANAGER
+  PHARMACIST
 }
 
 enum Status {

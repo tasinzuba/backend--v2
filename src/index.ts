@@ -11,6 +11,8 @@ import medicineRoutes from "./routes/medicine.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 import sellerRoutes from "./routes/seller.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import managerRoutes from "./routes/manager.routes.js";
+import pharmacistRoutes from "./routes/pharmacist.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
 
 dotenv.config();
@@ -50,6 +52,8 @@ app.use("/api/medicines", medicineRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/seller", sellerRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/manager", managerRoutes);
+app.use("/api/pharmacist", pharmacistRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/uploads", express.static("uploads"));
