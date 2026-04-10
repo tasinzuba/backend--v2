@@ -40,6 +40,7 @@ export const auth = betterAuth({
     },
     trustedOrigins: [
         "https://frontend-one-orpin-24.vercel.app",
+        "https://frontend-v2-kappa-eight.vercel.app",
         process.env.FRONTEND_URL,
     ].filter(Boolean) as string[],
     advanced: {
