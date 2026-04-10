@@ -4,15 +4,19 @@ import { bearer } from "better-auth/plugins";
 import { prisma } from "./prisma.js";
 import { sendVerificationEmail, sendPasswordResetEmail } from "./email.js";
 
+const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql",
     }),
     baseURL: process.env.BETTER_AUTH_URL,
+    basePath: "/api/auth",
     socialProviders: {
         google: {
             clientId: process.env.GOOGLE_CLIENT_ID || "",
             clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+            redirectURI: `${process.env.BETTER_AUTH_URL}/api/auth/callback/google`,
         },
     },
     emailAndPassword: {
@@ -24,7 +28,6 @@ export const auth = betterAuth({
     },
     emailVerification: {
         sendVerificationEmail: async ({ user, url }) => {
-            const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
             const vUrl = new URL(url);
             vUrl.searchParams.set("callbackURL", frontendUrl + "/login?message=Email verified successfully!");
             await sendVerificationEmail(user.email, vUrl.toString());
@@ -40,7 +43,7 @@ export const auth = betterAuth({
     },
     trustedOrigins: [
         "https://medistore-frontend-brown.vercel.app",
-        process.env.FRONTEND_URL,
+        frontendUrl,
     ].filter(Boolean) as string[],
     advanced: {
         useSecureCookies: true,
@@ -48,10 +51,11 @@ export const auth = betterAuth({
         crossSubDomainCookies: {
             enabled: false,
         },
-        cookieOptions: {
+        defaultCookieAttributes: {
             sameSite: "none",
             secure: true,
             httpOnly: true,
+            path: "/",
         },
         disableCSRFCheck: true,
     },
